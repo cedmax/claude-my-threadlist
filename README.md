@@ -72,17 +72,28 @@ Last.fm tags help order lesser-known tracks. Without a key, the skill orders the
 
 At [claude.ai/code](https://claude.ai/code), create an environment with these variables:
 
-| Variable | Value |
-| --- | --- |
-| `YT_CLIENT_ID` | from step 3 |
-| `YT_CLIENT_SECRET` | from step 3 |
-| `YT_REFRESH_TOKEN` | from step 4 |
-| `SLACK_CHANNEL_ID` | the Slack channel's ID |
-| `PLAYLIST_NAME` | the thread and playlist name, e.g. `Team Songs` |
-| `PLAYLIST_DEADLINE` | optional, shown in the opening message, e.g. `3 p.m. today (London time)` |
-| `PLAYLIST_TIMEZONE` | optional, IANA time zone for the dates, e.g. `America/New_York` (default `Europe/London`) |
-| `PLAYLIST_WINDOW_HOURS` | optional, how far back collect looks for the thread (default `28`) |
-| `LASTFM_API_KEY` | optional, from step 5 |
+| Variable | Required | Default | What it does |
+| --- | --- | --- | --- |
+| `YT_CLIENT_ID` | yes | – | OAuth client ID, from step 3 |
+| `YT_CLIENT_SECRET` | yes | – | OAuth client secret, from step 3 |
+| `YT_REFRESH_TOKEN` | yes | – | the bot channel's refresh token, from step 4 |
+| `SLACK_CHANNEL_ID` | yes | – | ID of the Slack channel the thread goes in |
+| `PLAYLIST_NAME` | yes | – | name used in the thread's first line and the playlist title, e.g. `Team Songs` → "Team Songs – week of 9 November 2026" |
+| `PLAYLIST_DEADLINE` | no | none | text shown as "Links close at …" in the opening message, used exactly as written, e.g. `3 p.m. today (London time)`; leave it out and that sentence is dropped |
+| `PLAYLIST_TIMEZONE` | no | `Europe/London` | IANA time zone for the date in the thread and playlist title, e.g. `America/New_York` |
+| `PLAYLIST_WINDOW_HOURS` | no | `28` | how many hours back collect looks for the opening thread |
+| `LASTFM_API_KEY` | no | none | Last.fm API key, from step 5; without it, tracks are ordered on Claude's knowledge alone |
+
+The skill stops and says so if a required variable is missing.
+
+Example:
+
+```
+PLAYLIST_NAME=Team Songs
+PLAYLIST_DEADLINE=3 p.m. today (London time)
+PLAYLIST_TIMEZONE=Europe/London
+PLAYLIST_WINDOW_HOURS=28
+```
 
 And allow these domains in its network access:
 
