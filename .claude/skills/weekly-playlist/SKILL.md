@@ -17,7 +17,7 @@ description: Opens the weekly D2C songs thread in Slack, and later collects the 
 ## Mode: open
 1. Post a new top-level message in the channel. The first line must be exactly the thread marker with today's date.
 2. Below it, add the description for the team (editable):
-   "Reply in this thread with a YouTube link to a song you'd like on this week's playlist. Links close at 3 p.m. today (London time)."
+   "Reply in this thread with a YouTube link to a song you'd like on this week's playlist, one song each. Links close at 3 p.m. today (London time)."
 3. End the message with the line: "_This is an automated message._"
 4. Stop. Don't post anything else.
 
@@ -29,7 +29,8 @@ description: Opens the weekly D2C songs thread in Slack, and later collects the 
    If there are several, use the most recent. If there are none, stop without posting anything.
    Take DATE from the marker line itself.
 2. **Check for duplicates.** If any reply in that thread was posted by the same account and starts with the playlist reply marker, stop without doing anything.
-3. **Collect links.** Read every reply in the thread (not the opening message). Extract all YouTube video links: `youtube.com/watch?v=`, `youtu.be/`, `music.youtube.com/watch?v=`, `youtube.com/shorts/`. Take the 11-character video ID from each, drop duplicates (keep the first), and ignore anything that isn't a video link, including playlist links.
+3. **Collect links.** Read every reply in the thread (not the opening message). Extract all YouTube video links: `youtube.com/watch?v=`, `youtu.be/`, `music.youtube.com/watch?v=`, `youtube.com/shorts/`. Take the 11-character video ID from each, and ignore anything that isn't a video link, including playlist links.
+   **One song per person:** going through the replies in the order they were posted, keep only each person's first video link and ignore any later ones from them, even if their first one later turns out to be unavailable or a rickroll. Count the ignored extras for the reply. Then drop duplicate IDs (keep the first). Track who posted what only for this step: never pass names to the scripts.
 4. If there are no video IDs, reply in the thread with the reply marker followed by "no songs this week." and stop.
 5. **Look the videos up.** Run `info <id> <id> …`. Videos listed under `unavailable` are private, deleted or invalid: leave them out and remember them for the reply. Videos listed under `rickrolls` are already left out of `videos`: never add them, even if asked in the thread, and remember how many there were for the reply. If a link is plainly a rickroll the script missed (e.g. a disguised re-upload whose title still names the song), leave it out too.
 6. **Order the tracks.** From each video's title and channel, work out artist and track. For each one, run `node .claude/skills/weekly-playlist/lastfm.mjs tags "<artist>" "<track>"` (it falls back to artist tags when the track has none). If a lookup fails, carry on without tags for that track. Using the tags plus your own knowledge of the songs, order them so they play well together: group similar genres and moods, build the energy up and then down, and don't put two songs by the same artist back to back. If a track can't be identified, place it where it seems to fit and don't drop it.
@@ -44,6 +45,7 @@ description: Opens the weekly D2C songs thread in Slack, and later collects the 
     - the track order (Artist – Title)
     - any links that were unavailable or failed to add
     - if any rickrolls were skipped, one line: "Nice try: {n} rickroll(s) skipped."
+    - if any extra links were ignored, one line: "One song each: {n} extra link(s) skipped."
     - a one-line tip: "On Tidal or Spotify? Paste the playlist link into TuneMyMusic."
     - last line: "_This is an automated message._"
     The same last line goes on the "no songs this week" reply in step 4.
