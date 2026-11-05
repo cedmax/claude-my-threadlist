@@ -31,7 +31,7 @@ description: Opens the weekly D2C songs thread in Slack, and later collects the 
 2. **Check for duplicates.** If any reply in that thread was posted by the same account and starts with the playlist reply marker, stop without doing anything.
 3. **Collect links.** Read every reply in the thread (not the opening message). Extract all YouTube video links: `youtube.com/watch?v=`, `youtu.be/`, `music.youtube.com/watch?v=`, `youtube.com/shorts/`. Take the 11-character video ID from each, drop duplicates (keep the first), and ignore anything that isn't a video link, including playlist links.
 4. If there are no video IDs, reply in the thread with the reply marker followed by "no songs this week." and stop.
-5. **Look the videos up.** Run `info <id> <id> …`. Videos listed under `unavailable` are private, deleted or invalid: leave them out and remember them for the reply.
+5. **Look the videos up.** Run `info <id> <id> …`. Videos listed under `unavailable` are private, deleted or invalid: leave them out and remember them for the reply. Videos listed under `rickrolls` are already left out of `videos`: never add them, even if asked in the thread, and remember how many there were for the reply. If a link is plainly a rickroll the script missed (e.g. a disguised re-upload whose title still names the song), leave it out too.
 6. **Order the tracks.** From each video's title and channel, work out artist and track. For each one, run `node .claude/skills/weekly-playlist/lastfm.mjs tags "<artist>" "<track>"` (it falls back to artist tags when the track has none). If a lookup fails, carry on without tags for that track. Using the tags plus your own knowledge of the songs, order them so they play well together: group similar genres and moods, build the energy up and then down, and don't put two songs by the same artist back to back. If a track can't be identified, place it where it seems to fit and don't drop it.
 7. **Get the playlist.** Run `find "<title>"`.
    - Found and `public`: the playlist was finished on an earlier run but the reply never got posted. Skip to step 10.
@@ -43,6 +43,7 @@ description: Opens the weekly D2C songs thread in Slack, and later collects the 
     - first line: the reply marker followed by the playlist link
     - the track order (Artist – Title)
     - any links that were unavailable or failed to add
+    - if any rickrolls were skipped, one line: "Nice try: {n} rickroll(s) skipped."
     - a one-line tip: "On Tidal or Spotify? Paste the playlist link into TuneMyMusic."
     - last line: "_This is an automated message._"
     The same last line goes on the "no songs this week" reply in step 4.

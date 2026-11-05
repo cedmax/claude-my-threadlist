@@ -62,6 +62,12 @@ const listAll = async (token, path) => {
   return items;
 };
 
+// Known rickroll uploads, plus a title check for re-uploads and remasters
+const RICKROLL_IDS = new Set([`dQw4w9WgXcQ`]);
+const RICKROLL_TITLE = /never\s*gonna\s*give\s*you\s*up/i;
+
+const isRickroll = ({ videoId, title }) => RICKROLL_IDS.has(videoId) || RICKROLL_TITLE.test(title);
+
 // Titles and availability for up to any number of video IDs (1 unit per 50)
 const info = async (token, videoIds) => {
   const found = new Map();
@@ -80,10 +86,13 @@ const info = async (token, videoIds) => {
     }
   }
   const available = videoIds.filter((id) => found.has(id) && found.get(id).privacy !== `private`);
+  const rickrolls = available.filter((id) => isRickroll(found.get(id)));
+  const kept = available.filter((id) => !rickrolls.includes(id));
   return {
     ok: true,
-    videos: available.map((id) => found.get(id)),
+    videos: kept.map((id) => found.get(id)),
     unavailable: videoIds.filter((id) => !available.includes(id)),
+    rickrolls,
   };
 };
 
