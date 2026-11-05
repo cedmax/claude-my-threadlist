@@ -1,12 +1,12 @@
 ---
 name: weekly-playlist
-description: Opens the weekly D2C songs thread in Slack, and later collects the YouTube links posted in it into an ordered YouTube playlist. Run with mode "open" or "collect"; the Slack channel is given in the prompt.
+description: Opens the weekly D2C songs thread in Slack, and later collects the YouTube links posted in it into an ordered YouTube playlist. Run with mode "open" or "collect"; the Slack channel ID comes from the SLACK_CHANNEL_ID environment variable.
 ---
 
 # Weekly D2C playlist
 
 ## Config
-- Slack channel: the one named in the prompt that invoked this skill. If none was given, stop and say so.
+- Slack channel: the channel ID in the `SLACK_CHANNEL_ID` environment variable (read it with `echo "$SLACK_CHANNEL_ID"`). If it's empty, stop and say so.
 - Time zone: all dates and times are Europe/London.
 - Thread marker (first line of the opening message, never change): `D2C Songs – week of {DATE}`
 - DATE format: D MMMM YYYY (e.g. 9 November 2026), the London date the thread is opened.
