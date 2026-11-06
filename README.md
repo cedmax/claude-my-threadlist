@@ -1,4 +1,4 @@
-# youtube-experiment
+# claude-my-threadlist
 
 A Claude Code skill that turns a weekly Slack thread of YouTube links into an ordered YouTube playlist.
 
@@ -31,8 +31,8 @@ You'll create your own Google project, YouTube channel and keys. Nothing is shar
 
 Fork this repo, then in **Settings → Pages** deploy from `main`, folder `/ (root)`. Your pages will be at:
 
-- Homepage: `https://<you>.github.io/youtube-experiment/`
-- Privacy policy: `https://<you>.github.io/youtube-experiment/PRIVACY`
+- Homepage: `https://<you>.github.io/claude-my-threadlist/`
+- Privacy policy: `https://<you>.github.io/claude-my-threadlist/PRIVACY`
 
 Google needs both before it lets you publish the app (step 3). Edit the contact line in `PRIVACY.md` to point at your fork.
 

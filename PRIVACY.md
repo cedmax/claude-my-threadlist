@@ -31,4 +31,4 @@ Access can be revoked at any time from the Google account's [third-party connect
 
 ## Contact
 
-Open an issue on [this repository](https://github.com/cedmax/youtube-experiment/issues).
+Open an issue on [this repository](https://github.com/cedmax/claude-my-threadlist/issues).
